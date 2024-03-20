@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { ModeToggle } from "./ThemeToggle";
 import { Button } from "./ui/button";
 
 import { LoginLink} from "@kinde-oss/kinde-auth-nextjs/components";
@@ -27,7 +26,7 @@ const Header = () => {
           <Button className="h-9 rounded-md px-3 text-sm font-medium">
             <LoginLink>Sign in</LoginLink>
           </Button>
-          <ModeToggle />
+         
         </div>
       </div>
     </header>
