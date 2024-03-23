@@ -155,7 +155,6 @@ export default function Dashboard() {
   async function fetchData(userEmail:string) {
     try {
       const response = await checkForUserTeam(userEmail);
-      console.log("res from fetchData:", response);
 
       if (response?.length === 0) {
         router.push("/teams/create"); 
@@ -169,7 +168,7 @@ export default function Dashboard() {
   },[user?.email]);
  
   return (
-    <>
+    <div className="text-black">
       <div>Dashboard Content</div>
       {isLoading || isUserDataLoading ? (
         <div>Loading</div>
@@ -180,6 +179,6 @@ export default function Dashboard() {
         </>
       )}
       <LogoutLink>Logout</LogoutLink>
-    </>
+    </div>
   );
 }
