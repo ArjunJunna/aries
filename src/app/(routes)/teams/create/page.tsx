@@ -57,7 +57,7 @@ const CreateTeam = () => {
   }
   return (
     <>
-      <div className="flex min-h-screen w-auto flex-col items-center justify-center space-y-6  text-primary max-sm:px-4">
+      <div className="flex h-screen w-auto flex-col items-center justify-center space-y-6  text-primary max-sm:px-4">
         <h1 className="font-mono text-6xl">Aries</h1>
         <h1 className="font-sans text-4xl max-sm:text-center">
           What should we name your team?

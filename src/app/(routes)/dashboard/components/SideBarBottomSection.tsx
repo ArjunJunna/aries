@@ -17,6 +17,9 @@ import { Input } from "@/components/ui/input";
 import { createNewFile, fetchAllFilesOfTeam } from "../action";
 import FormSubmitButton from "@/components/FormSubmitButton";
 import { toast } from "sonner";
+import { useContext } from "react";
+import { FileContextType } from "@/app/context/FileListContext";
+import { FileListContext } from "@/app/context/FileListContext";
 
 type UserTeam = {
   id: number;
@@ -30,6 +33,7 @@ type BottomSectionProps = {
 
 const SideBarBottomSection = ({ activeTeam }: BottomSectionProps) => {
   const [totalTeamFiles,setTotalTeamFiles]=useState<number>(0);
+  const { setFileList}=useContext(FileListContext) as FileContextType
   const menuList = [
     {
       id: 1,
@@ -68,6 +72,7 @@ const SideBarBottomSection = ({ activeTeam }: BottomSectionProps) => {
       const res = await fetchAllFilesOfTeam(teamId);
       
       setTotalTeamFiles(res?.length as number);
+      setFileList(res);
     } catch (error) {
       console.log(error)
     }

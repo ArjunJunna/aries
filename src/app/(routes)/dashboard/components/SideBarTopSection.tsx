@@ -38,7 +38,6 @@ type TopsSectionProps = {
 const SideBarTopSection = ({setActiveTeam,activeTeam}:TopsSectionProps) => {
   const { user } = useKindeBrowserClient();
   const [userTeams,setUserTeams]=useState<UserTeam[]>();
-  //const [activeTeam, setActiveTeam] = useState<UserTeam>();
 
   const fetchUserData = async (email:string) => {
     const data = await fetchUserTeams(email);
@@ -69,7 +68,10 @@ const SideBarTopSection = ({setActiveTeam,activeTeam}:TopsSectionProps) => {
     <div className="flex flex-1 flex-col gap-y-6">
       <Popover>
         <PopoverTrigger>
-          <div className="flex w-fit cursor-pointer items-center gap-x-2 rounded-lg p-3 font-bold hover:bg-slate-200">
+          <div className="flex w-fit cursor-pointer items-center gap-x-4 rounded-lg p-3 font-bold hover:bg-slate-200">
+            <Image src='/aries-logo-v1.png' alt='logo'
+                        width={60}
+                        height={40} />
             <span>{activeTeam?.name}</span> <ChevronDown />
           </div>
         </PopoverTrigger>
