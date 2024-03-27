@@ -22,9 +22,9 @@ import { FileContextType } from "@/app/context/FileListContext";
 import { FileListContext } from "@/app/context/FileListContext";
 
 type UserTeam = {
-  id: number;
+  id: string;
   name: string;
-  userId: number;
+  userId: string;
 };
 
 type BottomSectionProps = {
@@ -67,7 +67,7 @@ const SideBarBottomSection = ({ activeTeam }: BottomSectionProps) => {
     },
   ];
 
-  const getTeamFiles=async(teamId:number)=>{
+  const getTeamFiles=async(teamId:string)=>{
     try {
       const res = await fetchAllFilesOfTeam(teamId);
       
@@ -109,7 +109,7 @@ const SideBarBottomSection = ({ activeTeam }: BottomSectionProps) => {
           <form action={async(formData)=>{
             const res=await createNewFile(formData)
             if(res?.status===200){
-              getTeamFiles(activeTeam?.id as number);
+              getTeamFiles(activeTeam?.id as string);
               toast(res.message)
             }
           }}>

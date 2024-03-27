@@ -5,9 +5,9 @@ type File = {
   author: string;
   createdAt: Date;
   document: string;
-  id: number;
+  id: string;
   name: string;
-  teamId: number;
+  teamId: string;
   whiteboard: string;
 };
 

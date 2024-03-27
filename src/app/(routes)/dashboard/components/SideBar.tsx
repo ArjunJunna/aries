@@ -5,9 +5,9 @@ import SideBarBottomSection from "./SideBarBottomSection";
 import { useState } from "react";
 
 type UserTeam= {
-    id: number;
+    id: string;
     name: string;
-    userId: number;
+    userId: string;
 }
 
 const SideBar = () => {

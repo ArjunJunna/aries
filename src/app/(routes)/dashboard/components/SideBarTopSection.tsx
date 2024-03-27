@@ -25,9 +25,9 @@ import { fetchUserTeams } from "../action";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 type UserTeam= {
-    id: number;
+    id: string;
     name: string;
-    userId: number;
+    userId: string;
 }
 
 type TopsSectionProps = {
@@ -38,6 +38,7 @@ type TopsSectionProps = {
 const SideBarTopSection = ({setActiveTeam,activeTeam}:TopsSectionProps) => {
   const { user } = useKindeBrowserClient();
   const [userTeams,setUserTeams]=useState<UserTeam[]>();
+  const router=useRouter()
 
   const fetchUserData = async (email:string) => {
     const data = await fetchUserTeams(email);
@@ -94,6 +95,7 @@ const SideBarTopSection = ({setActiveTeam,activeTeam}:TopsSectionProps) => {
               key={index}
               className="flex cursor-pointer items-center
                         gap-2 rounded-lg p-2 text-sm hover:bg-gray-100"
+                        onClick={()=>router.push(`${item.path}`)}
             >
               <item.icon className="h-4 w-4" />
               {item.name}

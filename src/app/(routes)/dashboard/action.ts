@@ -37,14 +37,14 @@ export async function createNewFile(formData: FormData) {
     const teamId = formData.get("teamId");
 
     const author = await prisma.user.findUnique({
-      where: { id: Number(userId) },
+      where: { id: userId as string },
     });
     if (author) {
       const response = await prisma.file.create({
         data: {
           name: fileName as string,
           author: author?.name as string,
-          team: { connect: { id: Number(teamId) } },
+          team: { connect: { id: teamId as string } },
           archive:false,
           document:"",
           whiteboard:""
@@ -59,7 +59,7 @@ export async function createNewFile(formData: FormData) {
   }
 }
 
-export async function fetchAllFilesOfTeam(teamId:number){
+export async function fetchAllFilesOfTeam(teamId:string){
   try {
      const response = await prisma.file.findMany({
     where:{
