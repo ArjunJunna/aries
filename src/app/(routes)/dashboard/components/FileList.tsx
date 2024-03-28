@@ -93,7 +93,7 @@ const FileList = () => {
             teamFiles?.map((file: File, index: number) => (
               <tr
                 key={index}
-                onClick={() => router.push(`/workspace/${file.id}`)}
+                onClick={() =>router.push(`/workspace/${file.id}`)}
                 className="hover:cursor-pointer hover:bg-slate-50"
               >
                 <td className="whitespace-nowrap p-3 text-sm font-medium text-gray-900">
