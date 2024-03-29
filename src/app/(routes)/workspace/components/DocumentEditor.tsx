@@ -18,7 +18,7 @@ import Paragraph from "@editorjs/paragraph";
 // @ts-ignore
 import Warning from "@editorjs/warning";
 
-import { updateFileDocument } from "../action";
+import { updateFileById } from "../action";
 import { toast } from "sonner";
 
 const rawDocument = {
@@ -123,7 +123,7 @@ const DocumentEditor = ({ onTriggerSave, fileData }: DocumentEditorProps) => {
         .save()
         .then((outputData) => {
           console.log("Article data: ", outputData);
-          updateFileDocument(fileData.id, JSON.stringify(outputData)).then(
+          updateFileById(fileData.id, {document:JSON.stringify(outputData)}).then(
             (resp) => {
               toast("Document Updated!");
             },

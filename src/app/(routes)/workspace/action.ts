@@ -14,16 +14,21 @@ export const fetchFileDetails = async (fileId: string) => {
   }
 };
 
-export const updateFileDocument = async (fileId: string, document: string) => {
+export const updateFileById = async (
+  fileId: string,
+  dataToUpdate: { document?: string; whiteboard?: string },
+) => {
   try {
     const fileDetails = await prisma.file.update({
       where: {
         id: fileId,
       },
-      data: { document },
+      data: dataToUpdate,
     });
     return { status: 200, fileDetails };
   } catch (error) {
     console.log(error);
   }
 };
+
+
