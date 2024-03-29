@@ -20,6 +20,11 @@ import { toast } from "sonner";
 import { useContext } from "react";
 import { FileContextType } from "@/app/context/FileListContext";
 import { FileListContext } from "@/app/context/FileListContext";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/dist/types";
+
+
+import Constant from "@/utils/Constant";
 
 type UserTeam = {
   id: string;
@@ -32,6 +37,7 @@ type BottomSectionProps = {
 };
 
 const SideBarBottomSection = ({ activeTeam }: BottomSectionProps) => {
+    const { user} = useKindeBrowserClient();
   const [totalTeamFiles,setTotalTeamFiles]=useState<number>(0);
   const { setFileList}=useContext(FileListContext) as FileContextType
   const menuList = [
@@ -105,45 +111,64 @@ const SideBarBottomSection = ({ activeTeam }: BottomSectionProps) => {
             New File
           </Button>
         </DialogTrigger>
-        <DialogContent>
-          <form action={async(formData)=>{
-            const res=await createNewFile(formData)
-            if(res?.status===200){
-              getTeamFiles(activeTeam?.id as string);
-              toast(res.message)
-            }
-          }}>
-            <DialogHeader>
-              <DialogTitle>Create New File</DialogTitle>
-              <DialogDescription>
-                <Input type="hidden" name="teamId" value={activeTeam?.id} />
-                <Input type="hidden" name="userId" value={activeTeam?.userId} />
-                <Input type="text" name="fileName" />
-              </DialogDescription>
-            </DialogHeader>
-            <DialogFooter>
-              <DialogClose asChild>
-                <FormSubmitButton className="mt-4 ">Submit</FormSubmitButton>
-              </DialogClose>
-            </DialogFooter>
-          </form>
-        </DialogContent>
+        {totalTeamFiles < Constant.MAX_FREE_FILE ? (
+          <DialogContent>
+            <form
+              action={async (formData) => {
+                const res = await createNewFile(formData);
+                if (res?.status === 200) {
+                  getTeamFiles(activeTeam?.id as string);
+                  toast(res.message);
+                }
+              }}
+            >
+              <DialogHeader>
+                <DialogTitle>Create New File</DialogTitle>
+                <DialogDescription>
+                  <Input type="hidden" name="teamId" value={activeTeam?.id} />
+                  <Input
+                    type="hidden"
+                    name="userId"
+                    value={activeTeam?.userId}
+                  />
+                  <Input type="text" name="fileName" />
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <DialogClose asChild>
+                  <FormSubmitButton className="mt-4 ">Submit</FormSubmitButton>
+                </DialogClose>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        ) : (
+          
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>{`Hi ${user?.given_name}`}</DialogTitle>
+                <DialogDescription>
+                  You have the reached the maximum number of files for a team. Only 5 files for a team is allowed. To create more files upgrade the existing plan.
+                </DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+         
+        )}
       </Dialog>
 
       <div className="mt-5 h-4 w-full rounded-full bg-gray-200">
         <div
           className={`h-4  rounded-full bg-blue-600`}
-          style={{ width: `${(totalTeamFiles/5)*100}%` }}
+          style={{ width: `${(totalTeamFiles / 5) * 100}%` }}
         ></div>
       </div>
 
       <h2 className="mt-3 text-[12px]">
         <strong>{totalTeamFiles}</strong> out of
-        <strong> 5</strong> files used
+        <strong> {Constant.MAX_FREE_FILE}</strong> files used
       </h2>
       <h2 className="mt-1 text-[12px]">
-        <span className="underline hover:cursor-pointer">Upgrade</span> your plan for unlimited
-        access.
+        <span className="underline hover:cursor-pointer">Upgrade</span> your
+        plan for unlimited access.
       </h2>
     </div>
   );
