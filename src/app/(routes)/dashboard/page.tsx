@@ -1,7 +1,6 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/dist/types";
 import { checkForUserTeam } from "./action";

@@ -1,3 +1,6 @@
+import { z } from "zod";
+import { createTeamSchema } from "./validations";
+
 export type File = {
   archive: boolean;
   author: string;
@@ -15,7 +18,4 @@ export type UserTeam = {
   userId: string;
 };
 
-export type CreateTeamType = {
-  email: string;
-  teamName: string;
-};
+export type CreateTeamType=z.infer<typeof createTeamSchema >

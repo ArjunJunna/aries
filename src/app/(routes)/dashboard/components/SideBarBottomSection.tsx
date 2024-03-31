@@ -21,18 +21,18 @@ import { useContext } from "react";
 import { FileContextType } from "@/app/context/FileListContext";
 import { FileListContext } from "@/app/context/FileListContext";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
-import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/dist/types";
 import Constant from "@/utils/Constant";
 import { UserTeam } from "@/lib/types";
+import { createFileSchema } from "@/lib/validations";
 
 type BottomSectionProps = {
   activeTeam: UserTeam | undefined;
 };
 
 const SideBarBottomSection = ({ activeTeam }: BottomSectionProps) => {
-    const { user} = useKindeBrowserClient();
-  const [totalTeamFiles,setTotalTeamFiles]=useState<number>(0);
-  const { setFileList}=useContext(FileListContext) as FileContextType
+  const { user } = useKindeBrowserClient();
+  const [totalTeamFiles, setTotalTeamFiles] = useState<number>(0);
+  const { setFileList } = useContext(FileListContext) as FileContextType;
   const menuList = [
     {
       id: 1,
@@ -66,20 +66,20 @@ const SideBarBottomSection = ({ activeTeam }: BottomSectionProps) => {
     },
   ];
 
-  const getTeamFiles=async(teamId:string)=>{
+  const getTeamFiles = async (teamId: string) => {
     try {
       const res = await fetchAllFilesOfTeam(teamId);
-      
+
       setTotalTeamFiles(res?.length as number);
       setFileList(res);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
-  useEffect(()=>{
+  useEffect(() => {
     activeTeam && getTeamFiles(activeTeam.id);
-  },[activeTeam])
+  }, [activeTeam]);
 
   return (
     <div className="flex flex-col">
@@ -108,10 +108,19 @@ const SideBarBottomSection = ({ activeTeam }: BottomSectionProps) => {
           <DialogContent>
             <form
               action={async (formData) => {
-                const res = await createNewFile(formData);
-                if (res?.status === 200) {
-                  getTeamFiles(activeTeam?.id as string);
-                  toast(res.message);
+                const data = Object.fromEntries(formData.entries());
+                const result=createFileSchema.safeParse(data);
+            
+                if(result.success){
+                 
+                  const res = await createNewFile(formData);
+                  if (res?.status === 200) {
+                    getTeamFiles(activeTeam?.id as string);
+                    toast(res.message);
+                  }
+                }
+                else {
+                  toast("File creation failed. File name must have at least 2 characters.")
                 }
               }}
             >
@@ -135,16 +144,16 @@ const SideBarBottomSection = ({ activeTeam }: BottomSectionProps) => {
             </form>
           </DialogContent>
         ) : (
-          
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>{`Hi ${user?.given_name}`}</DialogTitle>
-                <DialogDescription>
-                  You have the reached the maximum number of files for a team. Only 5 files for a team is allowed. To create more files upgrade the existing plan.
-                </DialogDescription>
-              </DialogHeader>
-            </DialogContent>
-         
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>{`Hi ${user?.given_name}`}</DialogTitle>
+              <DialogDescription>
+                You have the reached the maximum number of files for a team.
+                Only 5 files for a team is allowed. To create more files upgrade
+                the existing plan.
+              </DialogDescription>
+            </DialogHeader>
+          </DialogContent>
         )}
       </Dialog>
 
