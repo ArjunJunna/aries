@@ -20,6 +20,7 @@ import Warning from "@editorjs/warning";
 
 import { updateFileById } from "../action";
 import { toast } from "sonner";
+import { File } from "@/lib/types";
 
 const rawDocument = {
   time: 1550476186479,
@@ -48,16 +49,6 @@ type DocumentEditorProps = {
   fileData: File;
 };
 
-type File = {
-  id: string;
-  name: string;
-  author: string;
-  teamId: string;
-  archive: boolean;
-  document: string;
-  whiteboard: string;
-  createdAt: Date;
-};
 
 const DocumentEditor = ({ onTriggerSave, fileData }: DocumentEditorProps) => {
   const ref = useRef<EditorJS>();

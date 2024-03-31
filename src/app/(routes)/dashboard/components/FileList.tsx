@@ -16,17 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Archive, MoreHorizontal, Move, Pen, Share2, Copy } from "lucide-react";
 import { useRouter } from "next/navigation";
-
-type File = {
-  archive: boolean;
-  author: string;
-  createdAt: Date;
-  document: string;
-  id: string;
-  name: string;
-  teamId: string;
-  whiteboard: string;
-};
+import { File } from "@/lib/types";
 
 const menuList = [
   {

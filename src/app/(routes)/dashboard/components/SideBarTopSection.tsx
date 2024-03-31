@@ -23,12 +23,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { fetchUserTeams } from "../action";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-
-type UserTeam= {
-    id: string;
-    name: string;
-    userId: string;
-}
+import { UserTeam } from "@/lib/types";
 
 type TopsSectionProps = {
   activeTeam:UserTeam | undefined

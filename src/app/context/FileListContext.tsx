@@ -1,15 +1,5 @@
 import { Dispatch, SetStateAction, createContext } from "react";
-
-type File = {
-  archive: boolean;
-  author: string;
-  createdAt: Date;
-  document: string;
-  id: string;
-  name: string;
-  teamId: string;
-  whiteboard: string;
-};
+import { File } from "@/lib/types";
 
 export type FileContextType = {
   fileList: File[] | undefined;

@@ -1,11 +1,6 @@
 "use server"
 import prisma from "@/lib/prisma";
-
-
-type CreateTeamType={
-    email: string,
-    teamName: string,
-}
+import { CreateTeamType } from "@/lib/types";
 
 export const createTeam=async({email,teamName}:CreateTeamType)=>{
     try {

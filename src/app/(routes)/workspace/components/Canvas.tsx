@@ -5,22 +5,13 @@ import { Excalidraw, MainMenu, WelcomeScreen } from "@excalidraw/excalidraw";
 import { updateFileById} from "../action";
 import { toast } from "sonner";
 import Image from "next/image";
+import { File } from "@/lib/types";
 
 type DocumentEditorProps = {
   onTriggerSave: boolean;
   fileData: File;
 };
 
-type File = {
-  id: string;
-  name: string;
-  author: string;
-  teamId: string;
-  archive: boolean;
-  document: string;
-  whiteboard: string;
-  createdAt: Date;
-};
 
 const Canvas = ({ onTriggerSave,fileData }: DocumentEditorProps) => {
 

@@ -5,18 +5,7 @@ import Canvas from "../components/Canvas";
 import DocumentEditor from "../components/DocumentEditor";
 import WorkSpaceHeader from "../components/WorkSpaceHeader";
 import {useEffect, useState} from "react";
-
- type File = {
-   id: string;
-   name: string;
-   author: string;
-   teamId: string;
-   archive: boolean;
-   document: string;
-   whiteboard: string;
-   createdAt: Date;
- };
-
+import { File } from "@/lib/types";
 
 const Workspace = ({ params }: { params: { fileId: string } }) => {
 const [triggerSave,setTriggerSave]=useState(false)

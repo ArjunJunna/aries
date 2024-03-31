@@ -22,15 +22,8 @@ import { FileContextType } from "@/app/context/FileListContext";
 import { FileListContext } from "@/app/context/FileListContext";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/dist/types";
-
-
 import Constant from "@/utils/Constant";
-
-type UserTeam = {
-  id: string;
-  name: string;
-  userId: string;
-};
+import { UserTeam } from "@/lib/types";
 
 type BottomSectionProps = {
   activeTeam: UserTeam | undefined;

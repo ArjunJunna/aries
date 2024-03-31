@@ -5,22 +5,12 @@ import { Link, Save } from "lucide-react";
 import Image from "next/image";
 import { fetchFileDetails } from "../action";
 import { Dispatch, SetStateAction, useEffect,useState } from "react";
+import { File } from "@/lib/types";
 
 type HeaderProps = {
   fileId: string;
   onSave: any;
 };
-
-  type File = {
-    id: string;
-    name: string;
-    author: string;
-    teamId: string;
-    archive: boolean;
-    document: string;
-    whiteboard: string;
-    createdAt: Date;
-  };
 
 const WorkSpaceHeader = ({fileId,onSave}:HeaderProps) => {
   const [fileDetails,setFileDetails]=useState<File | null>(null)

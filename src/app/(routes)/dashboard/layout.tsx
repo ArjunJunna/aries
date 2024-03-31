@@ -3,17 +3,7 @@
 import SideBar from "./components/SideBar";
 import { FileListContext } from "@/app/context/FileListContext";
 import { useState } from "react";
-
-type File = {
-  archive: boolean;
-  author: string;
-  createdAt: Date;
-  document: string;
-  id: string;
-  name: string;
-  teamId: string;
-  whiteboard: string;
-};
+import { File } from "@/lib/types";
 
 export default function RootLayout({
   children,

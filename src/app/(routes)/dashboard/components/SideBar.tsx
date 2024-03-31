@@ -3,12 +3,7 @@
 import SideBarTopSection from "./SideBarTopSection";
 import SideBarBottomSection from "./SideBarBottomSection";
 import { useState } from "react";
-
-type UserTeam= {
-    id: string;
-    name: string;
-    userId: string;
-}
+import { UserTeam } from "@/lib/types";
 
 const SideBar = () => {
    const [activeTeam, setActiveTeam] = useState<UserTeam | undefined>();
