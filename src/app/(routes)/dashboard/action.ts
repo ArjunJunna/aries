@@ -71,3 +71,39 @@ export async function fetchAllFilesOfTeam(teamId:string){
     console.log(error)
   }
 }
+
+export async function checkIfUserExist(email:string){
+  try {
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
+   
+    if(!user){
+      return null
+    }
+    return user;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function createNewUser(user:any){
+  try {
+    const { email, name, password, image } = user;
+   
+    const result = await prisma.user.create({
+        data: {
+          email,
+          name,
+          password,
+          image,
+        },
+      });
+       if (!result) {
+         return { status: 400, message: "Invalid user details entered." };
+       }
+       return result;
+  } catch (error) {
+      console.log(error);
+  }
+}
