@@ -7,6 +7,7 @@ import {
   Settings,
   Users,
   FolderPlus,
+  Loader2
 } from "lucide-react";
 import {
   Popover,
@@ -68,7 +69,7 @@ const SideBarTopSection = ({setActiveTeam,activeTeam}:TopsSectionProps) => {
             <Image src='/aries-logo-v1.png' alt='logo'
                         width={60}
                         height={40} />
-            <span>{activeTeam?.name}</span> <ChevronDown />
+            {activeTeam?<span>{activeTeam?.name}</span> :<Loader2 size={16} className="animate-spin"/>}<ChevronDown />
           </div>
         </PopoverTrigger>
         <PopoverContent className=" mt-2 w-60 p-2">

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
-import { Search, Send } from "lucide-react";
+import { Search, Send,Loader2 } from "lucide-react";
 import Image from "next/image";
 
 const Header = () => {
@@ -16,14 +16,14 @@ const Header = () => {
             className="max-w-36 outline-none"
           />
         </div>
-
-        <Image
+        {user? <Image
           src={user?.picture}
           alt="user"
           width={25}
           height={25}
           className="cursor-pointer rounded-full"
-        />
+        />:<Loader2 size={16} className="animate-spin"/>}
+       
 
         <Button
           className="flex h-8 gap-1

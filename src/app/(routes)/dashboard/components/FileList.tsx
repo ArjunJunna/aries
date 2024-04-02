@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import { useContext, useEffect, useState } from "react";
 import {
@@ -56,9 +56,8 @@ const FileList = () => {
     fileList && setTeamFiles(fileList);
   }, [fileList]);
 
-  return user === null ? (
-    <div className="text-center">Your file list is empty</div>
-  ) : (
+  /**/
+  return (
     <div className="overflow-x-auto p-4">
       <table className="min-w-full divide-y divide-gray-200 bg-white text-[12px]">
         <thead className="ltr:text-left rtl:text-right ">
@@ -79,52 +78,59 @@ const FileList = () => {
         </thead>
 
         <tbody className="divide-y divide-gray-200">
-          {teamFiles &&
-            teamFiles?.map((file: File, index: number) => (
-              <tr
-                key={index}
-                onClick={() =>router.push(`/workspace/${file.id}`)}
-                className="hover:cursor-pointer hover:bg-slate-50"
-              >
-                <td className="whitespace-nowrap p-3 text-sm font-medium text-gray-900">
-                  {file.name}
-                </td>
-                <td className="whitespace-nowrap p-3 text-gray-700">
-                  {moment(file.createdAt).format("DD MMM YYYY")}
-                </td>
-                <td className="whitespace-nowrap p-3 text-gray-700">
-                  {moment(file.createdAt).format("DD MMM YYYY")}
-                </td>
-                <td className="whitespace-nowrap p-3 text-gray-700">
-                  {user && (
-                    <Image
-                      src={user?.picture as string}
-                      alt="user"
-                      width={30}
-                      height={30}
-                      className="rounded-full"
-                    />
-                  )}
-                </td>
-                <td className="whitespace-nowrap p-3 text-gray-700">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger>
-                      <MoreHorizontal className=" hover:bg-slate-200 p-[2px] rounded-md" />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      {menuList.map((menu, index) => (
-                        <DropdownMenuItem
-                          className="cursor-pointer gap-3"
-                          key={index}
-                        >
-                          <menu.icon className="h-4 w-4" /> {menu.name}
-                        </DropdownMenuItem>
-                      ))}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </td>
-              </tr>
-            ))}
+          {teamFiles ? (
+            <>
+              {teamFiles.map((file: File, index: number) => (
+                <tr
+                  key={index}
+                  onClick={() => router.push(`/workspace/${file.id}`)}
+                  className="hover:cursor-pointer hover:bg-slate-50"
+                >
+                  <td className="whitespace-nowrap p-3 text-sm font-medium text-gray-900">
+                    {file.name}
+                  </td>
+                  <td className="whitespace-nowrap p-3 text-gray-700">
+                    {moment(file.createdAt).format("DD MMM YYYY")}
+                  </td>
+                  <td className="whitespace-nowrap p-3 text-gray-700">
+                    {moment(file.createdAt).format("DD MMM YYYY")}
+                  </td>
+                  <td className="whitespace-nowrap p-3 text-gray-700">
+                    {user && (
+                      <Image
+                        src={user?.picture as string}
+                        alt="user"
+                        width={30}
+                        height={30}
+                        className="rounded-full"
+                      />
+                    )}
+                  </td>
+                  <td className="whitespace-nowrap p-3 text-gray-700">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger>
+                        <MoreHorizontal className=" rounded-md p-[2px] hover:bg-slate-200" />
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        {menuList.map((menu, index) => (
+                          <DropdownMenuItem
+                            className="cursor-pointer gap-3"
+                            key={index}
+                          >
+                            <menu.icon className="h-4 w-4" /> {menu.name}
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </td>
+                </tr>
+              ))}
+            </>
+          ) : (
+            <div className="mt-4 pl-4 text-lg font-semibold">
+              Your file list is empty
+            </div>
+          )}
         </tbody>
       </table>
     </div>

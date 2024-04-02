@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button";
-import { Link, Save } from "lucide-react";
+import { Link, Save,Loader2 } from "lucide-react";
 import Image from "next/image";
 import { fetchFileDetails } from "../action";
 import { Dispatch, SetStateAction, useEffect,useState } from "react";
