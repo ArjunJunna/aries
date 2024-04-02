@@ -2,9 +2,16 @@ import { Button } from "@/components/ui/button";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { Search, Send,Loader2 } from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
 
-const Header = () => {
+const Header = ({onSearch}:any) => {
   const { user }: any = useKindeBrowserClient();
+   const [searchTerm, setSearchTerm] = useState('');
+
+  const handleSearch = (e:any) => {
+    setSearchTerm(e.target.value);
+    onSearch(e.target.value);
+  };
   return (
     <div className="flex h-20 w-full items-end justify-end gap-2 px-8 py-2">
       <div className="flex items-center gap-x-3">
@@ -12,18 +19,23 @@ const Header = () => {
           <Search className="h-4 w-4" />
           <input
             type="text"
-            placeholder="Search"
+            placeholder="Search..."
             className="max-w-36 outline-none"
+            value={searchTerm}
+            onChange={handleSearch}
           />
         </div>
-        {user? <Image
-          src={user?.picture}
-          alt="user"
-          width={25}
-          height={25}
-          className="cursor-pointer rounded-full"
-        />:<Loader2 size={16} className="animate-spin"/>}
-       
+        {user ? (
+          <Image
+            src={user?.picture}
+            alt="user"
+            width={25}
+            height={25}
+            className="cursor-pointer rounded-full"
+          />
+        ) : (
+          <Loader2 size={16} className="animate-spin" />
+        )}
 
         <Button
           className="flex h-8 gap-1
