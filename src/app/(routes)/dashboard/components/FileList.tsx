@@ -107,7 +107,7 @@ const FileList = ({ files }: any) => {
                       {moment(file.createdAt).format("DD MMM YYYY")}
                     </td>
                     <td className="whitespace-nowrap p-3 text-gray-700">
-                      {moment(file.createdAt).format("DD MMM YYYY")}
+                      {moment(file.updatedAt).format("DD MMM YYYY")}
                     </td>
                     <td className="whitespace-nowrap p-3 text-gray-700">
                       {user && (

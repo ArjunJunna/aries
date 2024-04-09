@@ -5,6 +5,7 @@ export type File = {
   archive: boolean;
   author: string;
   createdAt: Date;
+  updatedAt: Date;
   document: string;
   id: string;
   name: string;
