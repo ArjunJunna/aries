@@ -64,6 +64,9 @@ export async function fetchAllFilesOfTeam(teamId:string){
      const response = await prisma.file.findMany({
     where:{
       teamId:teamId
+    },
+    orderBy:{
+      createdAt:'desc',
     }
   })
   return response
