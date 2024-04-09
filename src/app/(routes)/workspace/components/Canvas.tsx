@@ -25,7 +25,7 @@ const Canvas = ({ onTriggerSave,fileData }: DocumentEditorProps) => {
        );
      };
   return (
-    <div className=" h-[700px]">
+    <div className=" h-full w-full">
       {fileData && (
         <Excalidraw
           theme="light"
