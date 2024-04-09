@@ -1,23 +1,29 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Link, Save, Loader2 } from "lucide-react";
+import { Link, Save } from "lucide-react";
 import Image from "next/image";
 import { fetchFileDetails } from "../action";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { File } from "@/lib/types";
+import { useEffect, useState } from "react";
+import { File, UserTeam } from "@/lib/types";
+import { fetchTeamByFileId } from "../../teams/create/action";
+import Loader from "@/components/Loader";
 
 type HeaderProps = {
   fileId: string;
   onSave: any;
-  setDisplay:(a:string)=>void
+  setDisplay: (a: string) => void;
 };
 
 const WorkSpaceHeader = ({ fileId, onSave, setDisplay }: HeaderProps) => {
   const [fileDetails, setFileDetails] = useState<File | null>(null);
+  const [team, setTeam] = useState<UserTeam | null>(null);
 
   const fetchFile = async (fileId: string) => {
     const result = await fetchFileDetails(fileId);
+    const team = await fetchTeamByFileId(result?.teamId as string);
+    console.log(team);
+    setTeam(team as UserTeam);
     setFileDetails(result as File);
   };
 
@@ -27,9 +33,23 @@ const WorkSpaceHeader = ({ fileId, onSave, setDisplay }: HeaderProps) => {
 
   return (
     <div className="flex items-center justify-between border-b p-3">
-      <div className="flex items-center gap-2 max-[510px]:hidden">
-        <Image src={"/aries-logo-v1.png"} alt="logo" height={40} width={40} />
-        <h2>{fileDetails?.name}</h2>
+      <div className="flex items-center gap-1 max-[510px]:hidden">
+        <Image
+          src={"/aries-logo-v1.png"}
+          alt="logo"
+          height={40}
+          width={60}
+          className="mr-2"
+        />
+        {team ? (
+          <>
+            <p className="font-medium">{team?.name}</p>
+            <p>/</p>
+            <p className="font-bold">{fileDetails?.name}</p>
+          </>
+        ) : (
+          <Loader />
+        )}
       </div>
       <div className="max-sm:hidden">
         <Button

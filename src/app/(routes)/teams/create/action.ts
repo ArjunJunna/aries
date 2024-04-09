@@ -29,3 +29,15 @@ export const createTeam=async({email,teamName}:CreateTeamType)=>{
         console.log(error);
     }
 }
+
+export const fetchTeamByFileId=async(id:string)=>{
+  try {
+      const team=await prisma.team.findUnique({
+        where:{id},
+      })
+      if(team==null) return {status:400,message:'Team not found.'}
+      return team
+  } catch (error) {
+    console.log(error);
+  }
+}

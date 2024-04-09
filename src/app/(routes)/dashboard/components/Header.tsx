@@ -1,6 +1,7 @@
+import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
-import { Search, Send,Loader2 } from "lucide-react";
+import { Search, Send} from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -34,7 +35,7 @@ const Header = ({onSearch}:any) => {
             className="cursor-pointer rounded-full"
           />
         ) : (
-          <Loader2 size={16} className="animate-spin" />
+          <Loader/>
         )}
 
         <Button

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Loader2 } from "lucide-react";
+import Loader from "@/components/Loader";
 
 const Loading = () => {
   return (
@@ -15,7 +15,7 @@ const Loading = () => {
         <p className="font-mono text-xl font-semibold tracking-wider text-gray-500">
           Loading
         </p>
-        <Loader2 size={16} className="animate-spin" />
+        <Loader />
       </div>
     </div>
   );

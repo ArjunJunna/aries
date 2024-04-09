@@ -21,10 +21,10 @@ import {
   Pen,
   Share2,
   Copy,
-  Loader2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { File } from "@/lib/types";
+import Loader from "@/components/Loader";
 
 const menuList = [
   {
@@ -70,7 +70,7 @@ const FileList = ({ files }: any) => {
         {!files && (
           <div className="flex gap-x-2">
             <p>Loading</p>
-            <Loader2 size={20} className="animate-spin" />
+            <Loader/>
           </div>
         )}
         {files?.length != 0 ? (

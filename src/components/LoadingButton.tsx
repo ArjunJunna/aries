@@ -1,4 +1,5 @@
-import { Loader2 } from "lucide-react";
+
+import Loader from "./Loader";
 import { Button } from "./ui/button";
 
 interface LoadingButtonProps
@@ -14,7 +15,7 @@ export default function LoadingButton({
   return (
     <Button {...props} disabled={props.disabled || loading}>
       <span className="flex items-center justify-center gap-1">
-        {loading && <Loader2 size={16} className="animate-spin" />}
+        {loading && <Loader />}
         {children}
       </span>
     </Button>
