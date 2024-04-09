@@ -81,6 +81,8 @@ const SideBarBottomSection = ({ activeTeam }: BottomSectionProps) => {
     activeTeam && getTeamFiles(activeTeam.id);
   }, [activeTeam]);
 
+
+
   return (
     <div className="flex flex-col">
       {menuList.map((menu, index) => (
@@ -109,18 +111,18 @@ const SideBarBottomSection = ({ activeTeam }: BottomSectionProps) => {
             <form
               action={async (formData) => {
                 const data = Object.fromEntries(formData.entries());
-                const result=createFileSchema.safeParse(data);
-            
-                if(result.success){
-                 
+                const result = createFileSchema.safeParse(data);
+
+                if (result.success) {
                   const res = await createNewFile(formData);
                   if (res?.status === 200) {
                     getTeamFiles(activeTeam?.id as string);
                     toast(res.message);
                   }
-                }
-                else {
-                  toast("File creation failed. File name must have at least 2 characters.")
+                } else {
+                  toast(
+                    "File creation failed. File name must have at least 2 characters.",
+                  );
                 }
               }}
             >
@@ -159,7 +161,7 @@ const SideBarBottomSection = ({ activeTeam }: BottomSectionProps) => {
 
       <div className="mt-5 h-4 w-full rounded-full bg-gray-200">
         <div
-          className={`h-4  rounded-full bg-blue-600`}
+          className={`h-4 rounded-full ${totalTeamFiles === 5 ? "bg-red-600" : "bg-blue-600"}`}
           style={{ width: `${(totalTeamFiles / 5) * 100}%` }}
         ></div>
       </div>
