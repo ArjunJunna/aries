@@ -8,7 +8,10 @@ import { Toaster } from "@/components/ui/sonner";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Aries",
+  title:{
+    default:'Aries',
+    template:'%s - Aries',
+  },
   description: "All in one design and documentation tool.",
 };
 

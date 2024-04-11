@@ -59,7 +59,6 @@ const DocumentEditor = ({ onTriggerSave, fileData }: DocumentEditorProps) => {
   }, [fileData]);
 
   useEffect(() => {
-    console.log("triiger Value:", onTriggerSave);
     onTriggerSave && onSaveDocument();
   }, [onTriggerSave]);
 

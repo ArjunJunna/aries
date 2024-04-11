@@ -67,12 +67,12 @@ const FileList = ({ files }: any) => {
   return (
     <div className="overflow-x-auto p-4">
       <table className="min-w-full divide-y divide-gray-200 bg-white text-[12px]">
-        {!files && (
+        {/*{!files && (
           <div className="flex gap-x-2">
             <p>Loading</p>
             <Loader/>
           </div>
-        )}
+        )}*/}
         {files?.length != 0 ? (
           <>
             <thead className="ltr:text-left rtl:text-right ">

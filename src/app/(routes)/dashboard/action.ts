@@ -80,10 +80,6 @@ export async function checkIfUserExist(email:string){
     const user = await prisma.user.findUnique({
       where: { email },
     });
-   
-    if(!user){
-      return null
-    }
     return user;
   } catch (error) {
     console.log(error);
