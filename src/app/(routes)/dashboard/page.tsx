@@ -14,20 +14,24 @@ export default function Dashboard() {
   const { user} = useKindeBrowserClient();
   const queryKey = ["userData", user?.email];
 
-  const { data: userData} = useQuery({
+  const { data: userData, isSuccess } = useQuery({
     queryKey: queryKey,
     queryFn: () => checkIfUserExist(user?.email as string),
     enabled: !!user,
+    //staleTime: 60*1000,
   });
 
- if (!userData) {
-   createNewUser({
-     email: user?.email,
-     name: user?.given_name,
-     image: user?.picture,
-     password: "",
-   });
- }
+ useEffect(() => {
+   if (isSuccess && !userData) {
+     createNewUser({
+       email: user?.email as string,
+       name: user?.given_name as string,
+       image: user?.picture as string,
+       password:'',
+     });
+   }
+ }, [isSuccess, userData,user]);
+
   async function fetchData(userEmail: string) {
     try {
       const response = await checkForUserTeam(userEmail);
@@ -42,9 +46,10 @@ export default function Dashboard() {
   useEffect(() => {
     fetchData(user?.email as string);
   }, [user?.email]);
+
+
  const { fileList } = useContext(FileListContext) as FileContextType;
    const [filteredFiles, setFilteredFiles] = useState(fileList);
-  
 
    const handleSearch = (searchTerm:any) => {
      if (!searchTerm) {
@@ -56,7 +61,6 @@ export default function Dashboard() {
        setFilteredFiles(filtered);
      }
    };
-   console.log('files',filteredFiles,fileList)
 
    useEffect(() => {
      setFilteredFiles(fileList);
