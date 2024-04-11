@@ -1,6 +1,12 @@
 import { Metadata } from "next";
 import Workspace from "../components/Workspace";
 import { fetchFileDetails } from "../action";
+import { getAllTeamFileIds } from "../../teams/create/action";
+
+export async function generateStaticParams() {
+  const allTeamFilesIds = await getAllTeamFileIds();
+  return allTeamFilesIds
+}
 
 export async function generateMetadata({
   params,
@@ -15,9 +21,8 @@ export async function generateMetadata({
 }
 
 
-const WorkspacePage = ({ params }: { params: { fileId: string } }) => {
+const WorkspacePage = async({ params }: { params: { fileId: string } }) => {
 const fileId=params.fileId;
-
   return (
     <>
       <Workspace fileId={fileId}/>
