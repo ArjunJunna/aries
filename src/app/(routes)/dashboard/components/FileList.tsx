@@ -1,10 +1,5 @@
 "use client";
 
-import { useContext, useEffect, useState } from "react";
-import {
-  FileContextType,
-  FileListContext,
-} from "@/app/context/FileListContext";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import moment from "moment";
 import Image from "next/image";
@@ -25,12 +20,37 @@ import {
 import { useRouter } from "next/navigation";
 import { File } from "@/lib/types";
 import Loader from "@/components/Loader";
+import { archiveFileById, unarchiveFileById } from "../action";
+import { toast } from "sonner";
 
+
+
+const handleMenuItemClick = (
+  fileId: string,
+  func: (fileId: string, path: string) => Promise<void>,
+  path: string,
+) => {
+  func(fileId, path);
+};
+
+
+const FileList = ({ files,path }: any) => {
+  const { user } = useKindeBrowserClient();
+  const router = useRouter();
 const menuList = [
   {
     id: 1,
-    name: "Archive",
+    name: path=='/dashboard/archived'?'Unarchive':'Archive',
     icon: Archive,
+    func: async (fileId: string,path:string) => {
+      if(path==='/dashboard/archived'){
+        const res = await unarchiveFileById(fileId);
+        res && toast('File UnArchived')
+      }else{
+         const res=await archiveFileById(fileId);
+         res && toast("File Archived");
+      }
+    },
   },
   {
     id: 2,
@@ -53,16 +73,6 @@ const menuList = [
     icon: Copy,
   },
 ];
-
-const FileList = ({ files }: any) => {
-  const { fileList } = useContext(FileListContext) as FileContextType;
-  const [teamFiles, setTeamFiles] = useState<File[]>();
-  const { user } = useKindeBrowserClient();
-  const router = useRouter();
-
-  useEffect(() => {
-    fileList && setTeamFiles(fileList);
-  }, [fileList]);
 
   return (
     <div className="overflow-x-auto p-4">
@@ -130,6 +140,16 @@ const FileList = ({ files }: any) => {
                             <DropdownMenuItem
                               className="cursor-pointer gap-3"
                               key={index}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                console.log("clicked");
+                                if (
+                                  menu.func &&
+                                  typeof menu.func === "function"
+                                ) {
+                                  handleMenuItemClick(file.id, menu.func,path as string); 
+                                }
+                              }}
                             >
                               <menu.icon className="h-4 w-4" /> {menu.name}
                             </DropdownMenuItem>

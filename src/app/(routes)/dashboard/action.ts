@@ -106,3 +106,33 @@ export async function createNewUser(user:any){
       console.log(error);
   }
 }
+
+export async function archiveFileById(fileId:string){
+  try {
+      const updatedFile = await prisma.file.update({
+        where: { id: fileId },
+        data: {
+          archive: true,
+        },
+      });
+      return updatedFile;
+
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function unarchiveFileById(fileId: string) {
+  try {
+    const updatedFile = await prisma.file.update({
+      where: { id: fileId },
+      data: {
+        archive: false,
+      },
+    });
+     return updatedFile;
+ 
+  } catch (error) {
+    console.log(error);
+  }
+}

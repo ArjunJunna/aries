@@ -10,6 +10,7 @@ import { FileListContext } from "@/app/context/FileListContext";
 import Constant from "@/utils/Constant";
 import { UserTeam } from "@/lib/types";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 
 const CreateNewFile = dynamic(() => import("./CreateNewFile"));
 
@@ -18,7 +19,7 @@ type BottomSectionProps = {
 };
 
 const SideBarBottomSection = ({ activeTeam }: BottomSectionProps) => {
-
+  const router=useRouter()
   const [totalTeamFiles, setTotalTeamFiles] = useState<number>(0);
   const { setFileList } = useContext(FileListContext) as FileContextType;
   const menuList = [
@@ -38,7 +39,7 @@ const SideBarBottomSection = ({ activeTeam }: BottomSectionProps) => {
       id: 3,
       name: "Archive",
       icon: Archive,
-      path: "",
+      path: "/dashboard/archived",
     },
     {
       id: 4,
@@ -78,13 +79,18 @@ const SideBarBottomSection = ({ activeTeam }: BottomSectionProps) => {
           key={index}
           className="flex cursor-pointer items-center gap-2 rounded-md 
         p-1 px-4 text-[14px] font-bold hover:bg-gray-100"
+          onClick={() => router.push(`${menu.path}`)}
         >
           <menu.icon className="h-4 w-4" />
           {menu.name}
         </h2>
       ))}
 
-      <CreateNewFile activeTeam={activeTeam} totalTeamFiles={totalTeamFiles} getTeamFiles={getTeamFiles}/>
+      <CreateNewFile
+        activeTeam={activeTeam}
+        totalTeamFiles={totalTeamFiles}
+        getTeamFiles={getTeamFiles}
+      />
 
       <div className="mt-5 h-4 w-full rounded-full bg-gray-200">
         <div

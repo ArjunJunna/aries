@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { checkForUserTeam, createNewUser } from "./action";
 import { useContext, useEffect,useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Header from './components/Header';
 import FileList from "./components/FileList";
 import { checkIfUserExist } from "./action";
@@ -13,6 +13,7 @@ export default function Dashboard() {
   const router = useRouter();
   const { user} = useKindeBrowserClient();
   const queryKey = ["userData", user?.email];
+   const pathname = usePathname();
 
   const { data: userData, isSuccess } = useQuery({
     queryKey: queryKey,
@@ -63,13 +64,13 @@ export default function Dashboard() {
    };
 
    useEffect(() => {
-     setFilteredFiles(fileList);
+     setFilteredFiles(fileList?.filter((file) => !file?.archive));
    }, [fileList]);
 
   return (
     <div className="text-black">
       <Header onSearch={handleSearch} />
-      <FileList files={filteredFiles} />
+      <FileList files={filteredFiles} path={pathname} />
     </div>
   );
 }

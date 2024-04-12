@@ -13,6 +13,7 @@ import { fetchUserTeams } from "../action";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { UserTeam } from "@/lib/types";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 
 type TopsSectionProps = {
   activeTeam:UserTeam | undefined
@@ -24,7 +25,7 @@ const TopBarMenu = dynamic(() => import("./TopBarMenu"));
 const SideBarTopSection = ({setActiveTeam,activeTeam}:TopsSectionProps) => {
   const { user } = useKindeBrowserClient();
   const [userTeams,setUserTeams]=useState<UserTeam[]>();
-
+  const router = useRouter();
   const fetchUserData = async (email:string) => {
     const data = await fetchUserTeams(email);
     setUserTeams(data);
@@ -37,11 +38,16 @@ const SideBarTopSection = ({setActiveTeam,activeTeam}:TopsSectionProps) => {
 
   return (
     <div className="flex flex-1 flex-col gap-y-6">
-     <TopBarMenu activeTeam={activeTeam} userTeams={userTeams} setActiveTeam={setActiveTeam}/>
+      <TopBarMenu
+        activeTeam={activeTeam}
+        userTeams={userTeams}
+        setActiveTeam={setActiveTeam}
+      />
       <Button
         variant="outline"
         className=" w-full
           justify-start gap-2 font-bold"
+        onClick={() => router.push(`/dashboard`)}
       >
         <LayoutGrid className="h-5 w-5" />
         All Files
