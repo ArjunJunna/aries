@@ -41,3 +41,23 @@ export const fetchTeamByFileId=async(id:string)=>{
     console.log(error);
   }
 }
+export const getAllTeamFileIds = async ()=> {
+  try {
+    const allTeamFiles = await prisma.team.findMany({
+      include: {
+        files: { select: { id: true } },
+      },
+    });
+
+    const fileIds: string[] = [];
+    allTeamFiles.forEach((team) => {
+      team.files.forEach((file) => {
+        fileIds.push(file.id);
+      });
+    });
+
+    return fileIds;
+  } catch (error) {
+    console.log("Error fetching file IDs:", error);
+  }
+};

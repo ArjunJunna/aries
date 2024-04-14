@@ -1,10 +1,5 @@
 "use client";
 
-import { useContext, useEffect, useState } from "react";
-import {
-  FileContextType,
-  FileListContext,
-} from "@/app/context/FileListContext";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import moment from "moment";
 import Image from "next/image";
@@ -14,65 +9,89 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Archive,
-  MoreHorizontal,
-  Move,
-  Pen,
-  Share2,
-  Copy,
-} from "lucide-react";
+import { Archive, MoreHorizontal, Move, Pen, Share2, Copy } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { File } from "@/lib/types";
 import Loader from "@/components/Loader";
+import {
+  archiveFileById,
+  fetchAllFilesOfTeam,
+  unarchiveFileById,
+} from "../action";
+import { toast } from "sonner";
+import { useDataStore } from "@/lib/store";
 
-const menuList = [
-  {
-    id: 1,
-    name: "Archive",
-    icon: Archive,
-  },
-  {
-    id: 2,
-    name: "Rename",
-    icon: Pen,
-  },
-  {
-    id: 3,
-    name: "Share",
-    icon: Share2,
-  },
-  {
-    id: 4,
-    name: "Move",
-    icon: Move,
-  },
-  {
-    id: 5,
-    name: "Duplicate",
-    icon: Copy,
-  },
-];
+const handleMenuItemClick = (
+  fileId: string,
+  func: (fileId: string, path: string) => Promise<void>,
+  path: string,
+) => {
+  func(fileId, path);
+};
 
-const FileList = ({ files }: any) => {
-  const { fileList } = useContext(FileListContext) as FileContextType;
-  const [teamFiles, setTeamFiles] = useState<File[]>();
+const FileList = ({ files, path }: any) => {
   const { user } = useKindeBrowserClient();
   const router = useRouter();
-
-  useEffect(() => {
-    fileList && setTeamFiles(fileList);
-  }, [fileList]);
+  const setFileList=useDataStore((state)=>state.setFileList)
+  const activeTeam=useDataStore((state)=>state.activeTeam)
+  const getTeamFiles = async (teamId: string) => {
+    try {
+      const res = await fetchAllFilesOfTeam(teamId);
+      setFileList(res as File[]);
+    
+    } catch (error) {
+      console.log(error);
+    }
+  };
+ 
+  const menuList = [
+    {
+      id: 1,
+      name: path == "/dashboard/archived" ? "Unarchive" : "Archive",
+      icon: Archive,
+      func: async (fileId: string, path: string) => {
+        if (path === "/dashboard/archived") {
+          const res = await unarchiveFileById(fileId);
+          getTeamFiles(activeTeam?.id as string);
+          res && toast("File UnArchived");
+        } else {
+          const res = await archiveFileById(fileId);
+          getTeamFiles(activeTeam?.id as string);
+          res && toast("File Archived");
+        }
+      },
+    },
+    {
+      id: 2,
+      name: "Rename",
+      icon: Pen,
+    },
+    {
+      id: 3,
+      name: "Share",
+      icon: Share2,
+    },
+    {
+      id: 4,
+      name: "Move",
+      icon: Move,
+    },
+    {
+      id: 5,
+      name: "Duplicate",
+      icon: Copy,
+    },
+  ];
 
   return (
     <div className="overflow-x-auto p-4">
       <table className="min-w-full divide-y divide-gray-200 bg-white text-[12px]">
-        {!files && (
+        {/*{!files && (
           <div className="flex gap-x-2">
             <p>Loading</p>
             <Loader/>
           </div>
-        )}
+        )}*/}
         {files?.length != 0 ? (
           <>
             <thead className="ltr:text-left rtl:text-right ">
@@ -130,6 +149,20 @@ const FileList = ({ files }: any) => {
                             <DropdownMenuItem
                               className="cursor-pointer gap-3"
                               key={index}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                console.log("clicked");
+                                if (
+                                  menu.func &&
+                                  typeof menu.func === "function"
+                                ) {
+                                  handleMenuItemClick(
+                                    file.id,
+                                    menu.func,
+                                    path as string,
+                                  );
+                                }
+                              }}
                             >
                               <menu.icon className="h-4 w-4" /> {menu.name}
                             </DropdownMenuItem>

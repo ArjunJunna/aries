@@ -1,38 +1,28 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Archive, Flag, Github, Lock, Book } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { createNewFile, fetchAllFilesOfTeam } from "../action";
-import FormSubmitButton from "@/components/FormSubmitButton";
-import { toast } from "sonner";
-import { useContext } from "react";
-import { FileContextType } from "@/app/context/FileListContext";
-import { FileListContext } from "@/app/context/FileListContext";
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import { fetchAllFilesOfTeam } from "../action";
 import Constant from "@/utils/Constant";
 import { UserTeam } from "@/lib/types";
-import { createFileSchema } from "@/lib/validations";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
+import { useDataStore } from "@/lib/store";
+import { File } from "@/lib/types";
+
+const CreateNewFile = dynamic(() => import("./CreateNewFile"));
 
 type BottomSectionProps = {
   activeTeam: UserTeam | undefined;
 };
 
 const SideBarBottomSection = ({ activeTeam }: BottomSectionProps) => {
-  const { user } = useKindeBrowserClient();
+  const router=useRouter()
   const [totalTeamFiles, setTotalTeamFiles] = useState<number>(0);
-  const { setFileList } = useContext(FileListContext) as FileContextType;
+    const fileList = useDataStore((state) => state.fileList)
+     const setFileList = useDataStore((state) => state.setFileList);
+    const unarchiveFiles=fileList?.filter(file=>!file.archive).length;
+
   const menuList = [
     {
       id: 1,
@@ -50,7 +40,7 @@ const SideBarBottomSection = ({ activeTeam }: BottomSectionProps) => {
       id: 3,
       name: "Archive",
       icon: Archive,
-      path: "",
+      path: "/dashboard/archived",
     },
     {
       id: 4,
@@ -69,9 +59,10 @@ const SideBarBottomSection = ({ activeTeam }: BottomSectionProps) => {
   const getTeamFiles = async (teamId: string) => {
     try {
       const res = await fetchAllFilesOfTeam(teamId);
-
-      setTotalTeamFiles(res?.length as number);
-      setFileList(res);
+     
+      const unarchiveFiles=res?.filter(file=>!file.archive);
+      setTotalTeamFiles(unarchiveFiles?.length as number);
+      setFileList(res as File[]);
     } catch (error) {
       console.log(error);
     }
@@ -90,84 +81,28 @@ const SideBarBottomSection = ({ activeTeam }: BottomSectionProps) => {
           key={index}
           className="flex cursor-pointer items-center gap-2 rounded-md 
         p-1 px-4 text-[14px] font-bold hover:bg-gray-100"
+          onClick={() => router.push(`${menu.path}`)}
         >
           <menu.icon className="h-4 w-4" />
           {menu.name}
         </h2>
       ))}
 
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button
-            variant="outline"
-            className="mt-6 w-full
-          justify-start bg-blue-500 font-bold text-white hover:bg-blue-600 hover:text-white "
-          >
-            New File
-          </Button>
-        </DialogTrigger>
-        {totalTeamFiles < Constant.MAX_FREE_FILE ? (
-          <DialogContent>
-            <form
-              action={async (formData) => {
-                const data = Object.fromEntries(formData.entries());
-                const result = createFileSchema.safeParse(data);
-
-                if (result.success) {
-                  const res = await createNewFile(formData);
-                  if (res?.status === 200) {
-                    getTeamFiles(activeTeam?.id as string);
-                    toast(res.message);
-                  }
-                } else {
-                  toast(
-                    "File creation failed. File name must have at least 2 characters.",
-                  );
-                }
-              }}
-            >
-              <DialogHeader>
-                <DialogTitle>Create New File</DialogTitle>
-                <DialogDescription>
-                  <Input type="hidden" name="teamId" value={activeTeam?.id} />
-                  <Input
-                    type="hidden"
-                    name="userId"
-                    value={activeTeam?.userId}
-                  />
-                  <Input type="text" name="fileName" />
-                </DialogDescription>
-              </DialogHeader>
-              <DialogFooter>
-                <DialogClose asChild>
-                  <FormSubmitButton className="mt-4 ">Submit</FormSubmitButton>
-                </DialogClose>
-              </DialogFooter>
-            </form>
-          </DialogContent>
-        ) : (
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>{`Hi ${user?.given_name}`}</DialogTitle>
-              <DialogDescription>
-                You have the reached the maximum number of files for a team.
-                Only 5 files for a team is allowed. To create more files upgrade
-                the existing plan.
-              </DialogDescription>
-            </DialogHeader>
-          </DialogContent>
-        )}
-      </Dialog>
+      <CreateNewFile
+        activeTeam={activeTeam}
+        totalTeamFiles={totalTeamFiles}
+        getTeamFiles={getTeamFiles}
+      />
 
       <div className="mt-5 h-4 w-full rounded-full bg-gray-200">
         <div
-          className={`h-4 rounded-full ${totalTeamFiles === 5 ? "bg-red-600" : "bg-blue-600"}`}
-          style={{ width: `${(totalTeamFiles / 5) * 100}%` }}
+          className={`h-4 rounded-full ${unarchiveFiles === 5 ? "bg-red-600" : "bg-blue-600"}`}
+          style={{ width: `${(unarchiveFiles as number / 5) * 100}%` }}
         ></div>
       </div>
 
       <h2 className="mt-3 text-[12px]">
-        <strong>{totalTeamFiles}</strong> out of
+        <strong>{unarchiveFiles}</strong> out of
         <strong> {Constant.MAX_FREE_FILE}</strong> files used
       </h2>
       <h2 className="mt-1 text-[12px]">

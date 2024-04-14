@@ -80,10 +80,6 @@ export async function checkIfUserExist(email:string){
     const user = await prisma.user.findUnique({
       where: { email },
     });
-   
-    if(!user){
-      return null
-    }
     return user;
   } catch (error) {
     console.log(error);
@@ -108,5 +104,35 @@ export async function createNewUser(user:any){
        return result;
   } catch (error) {
       console.log(error);
+  }
+}
+
+export async function archiveFileById(fileId:string){
+  try {
+      const updatedFile = await prisma.file.update({
+        where: { id: fileId },
+        data: {
+          archive: true,
+        },
+      });
+      return updatedFile;
+
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function unarchiveFileById(fileId: string) {
+  try {
+    const updatedFile = await prisma.file.update({
+      where: { id: fileId },
+      data: {
+        archive: false,
+      },
+    });
+     return updatedFile;
+ 
+  } catch (error) {
+    console.log(error);
   }
 }

@@ -1,24 +1,25 @@
 "use client";
 
 import SideBar from "./components/SideBar";
-import { FileListContext } from "@/app/context/FileListContext";
-import { useState } from "react";
-import { File } from "@/lib/types";
+import { useEffect} from "react";
+import { useDataStore } from "@/lib/store";
+import HydrationZustand from "./components/Hydration";
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [fileList, setFileList] = useState<File[] | undefined>(undefined);
+   useEffect(() => {
+     useDataStore.persist.rehydrate();
+   }, []);
+
   return (
-    <div>
-      <FileListContext.Provider value={{ fileList, setFileList}}>
-        <div className="flex h-screen ">
-          <SideBar />
-          <div className=" flex grow flex-col text-white">{children}</div>
-        </div>
-      </FileListContext.Provider>
-    </div>
+    <HydrationZustand>
+      <div className="flex h-screen ">
+        <SideBar />
+        <div className=" flex grow flex-col text-white">{children}</div>
+      </div>
+    </HydrationZustand>
   );
 }

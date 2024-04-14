@@ -22,7 +22,6 @@ const WorkSpaceHeader = ({ fileId, onSave, setDisplay }: HeaderProps) => {
   const fetchFile = async (fileId: string) => {
     const result = await fetchFileDetails(fileId);
     const team = await fetchTeamByFileId(result?.teamId as string);
-    console.log(team);
     setTeam(team as UserTeam);
     setFileDetails(result as File);
   };
