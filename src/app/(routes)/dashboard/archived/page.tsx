@@ -1,16 +1,13 @@
 'use client'
 
-import { useContext, useEffect, useState } from "react";
-import {
-  FileContextType,
-  FileListContext,
-} from "@/app/context/FileListContext";
+import {  useEffect, useState } from "react";
 import FileList from "../components/FileList";
 import ArchiveHeader from "./ArchiveHeader";
 import { usePathname } from "next/navigation";
+import { useDataStore } from "@/lib/store";
 
 const ArchivePage = () => {
-     const { fileList,setFileList } = useContext(FileListContext) as FileContextType;
+     const  fileList  = useDataStore(state=>state.fileList)
      const [filteredFiles, setFilteredFiles] = useState(fileList);
      const pathname = usePathname();
      const handleSearch = (searchTerm: any) => {

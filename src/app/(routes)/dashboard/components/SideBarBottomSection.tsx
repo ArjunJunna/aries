@@ -2,15 +2,13 @@
 
 import { Archive, Flag, Github, Lock, Book } from "lucide-react";
 import React, { useEffect, useState } from "react";
-
 import { fetchAllFilesOfTeam } from "../action";
-import { useContext } from "react";
-import { FileContextType } from "@/app/context/FileListContext";
-import { FileListContext } from "@/app/context/FileListContext";
 import Constant from "@/utils/Constant";
 import { UserTeam } from "@/lib/types";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
+import { useDataStore } from "@/lib/store";
+import { File } from "@/lib/types";
 
 const CreateNewFile = dynamic(() => import("./CreateNewFile"));
 
@@ -21,7 +19,10 @@ type BottomSectionProps = {
 const SideBarBottomSection = ({ activeTeam }: BottomSectionProps) => {
   const router=useRouter()
   const [totalTeamFiles, setTotalTeamFiles] = useState<number>(0);
-  const { setFileList } = useContext(FileListContext) as FileContextType;
+    const fileList = useDataStore((state) => state.fileList)
+     const setFileList = useDataStore((state) => state.setFileList);
+    const unarchiveFiles=fileList?.filter(file=>!file.archive).length;
+
   const menuList = [
     {
       id: 1,
@@ -58,9 +59,10 @@ const SideBarBottomSection = ({ activeTeam }: BottomSectionProps) => {
   const getTeamFiles = async (teamId: string) => {
     try {
       const res = await fetchAllFilesOfTeam(teamId);
-
-      setTotalTeamFiles(res?.length as number);
-      setFileList(res);
+     
+      const unarchiveFiles=res?.filter(file=>!file.archive);
+      setTotalTeamFiles(unarchiveFiles?.length as number);
+      setFileList(res as File[]);
     } catch (error) {
       console.log(error);
     }
@@ -94,13 +96,13 @@ const SideBarBottomSection = ({ activeTeam }: BottomSectionProps) => {
 
       <div className="mt-5 h-4 w-full rounded-full bg-gray-200">
         <div
-          className={`h-4 rounded-full ${totalTeamFiles === 5 ? "bg-red-600" : "bg-blue-600"}`}
-          style={{ width: `${(totalTeamFiles / 5) * 100}%` }}
+          className={`h-4 rounded-full ${unarchiveFiles === 5 ? "bg-red-600" : "bg-blue-600"}`}
+          style={{ width: `${(unarchiveFiles as number / 5) * 100}%` }}
         ></div>
       </div>
 
       <h2 className="mt-3 text-[12px]">
-        <strong>{totalTeamFiles}</strong> out of
+        <strong>{unarchiveFiles}</strong> out of
         <strong> {Constant.MAX_FREE_FILE}</strong> files used
       </h2>
       <h2 className="mt-1 text-[12px]">

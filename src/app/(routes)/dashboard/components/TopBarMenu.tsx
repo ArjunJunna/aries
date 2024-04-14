@@ -18,17 +18,16 @@ import Loader from "@/components/Loader";
 import { Separator } from "@/components/ui/separator";
 import { UserTeam } from "@/lib/types";
 import { useRouter } from "next/navigation";
-import { Dispatch, SetStateAction } from "react";
 
 type TopBarMenuProps = {
   activeTeam: UserTeam | undefined;
   userTeams: UserTeam[] | undefined;
-  setActiveTeam: Dispatch<SetStateAction<UserTeam | undefined>>;
+  setActiveTeam: (activeTeam: UserTeam) => void;
 };
 
 const TopBarMenu = ({activeTeam,userTeams,setActiveTeam}:TopBarMenuProps) => {
      const router = useRouter();
-       const { user } = useKindeBrowserClient();
+     const { user } = useKindeBrowserClient();
      const menu = [
        {
          id: 1,
@@ -61,7 +60,9 @@ const TopBarMenu = ({activeTeam,userTeams,setActiveTeam}:TopBarMenuProps) => {
                          rounded-lg p-2 text-sm hover:bg-gray-100
                          ${activeTeam?.id == team.id && "bg-blue-500  hover:text-foreground"}
                         `}
-              onClick={() => setActiveTeam(team)}
+              onClick={() => {setActiveTeam(team)
+                setActiveTeam(team)
+              }}
             >
               {team.name}
             </h2>

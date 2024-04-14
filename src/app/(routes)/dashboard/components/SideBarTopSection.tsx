@@ -4,20 +4,19 @@ import {
   LayoutGrid,
   FolderPlus,
 } from "lucide-react";
-
 import {
   useKindeBrowserClient,
 } from "@kinde-oss/kinde-auth-nextjs";
 import { Button } from "@/components/ui/button";
 import { fetchUserTeams } from "../action";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import { UserTeam } from "@/lib/types";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 
 type TopsSectionProps = {
-  activeTeam:UserTeam | undefined
-  setActiveTeam: Dispatch<SetStateAction<UserTeam | undefined>>;
+  activeTeam: UserTeam | undefined;
+  setActiveTeam: (activeTeam: UserTeam) => void;
 };
 
 const TopBarMenu = dynamic(() => import("./TopBarMenu"));

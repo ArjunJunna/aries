@@ -2,11 +2,11 @@
 
 import SideBarTopSection from "./SideBarTopSection";
 import SideBarBottomSection from "./SideBarBottomSection";
-import { useState } from "react";
-import { UserTeam } from "@/lib/types";
+import { useDataStore } from "@/lib/store";
 
 const SideBar = () => {
-   const [activeTeam, setActiveTeam] = useState<UserTeam | undefined>();
+   const  activeTeam = useDataStore(state=>state.activeTeam)
+   const setActiveTeam = useDataStore((state) => state.setActiveTeam);
   
   return (
     <div className="flex min-h-screen  w-[17.2rem] flex-col border-r p-6 max-sm:hidden">

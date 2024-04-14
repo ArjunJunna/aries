@@ -53,7 +53,7 @@ type DocumentEditorProps = {
 const DocumentEditor = ({ onTriggerSave, fileData }: DocumentEditorProps) => {
   const ref = useRef<EditorJS>();
 
-  const [document, setDocument] = useState(rawDocument);
+  //const [document, setDocument] = useState(rawDocument);
   useEffect(() => {
     fileData && initEditor();
   }, [fileData]);

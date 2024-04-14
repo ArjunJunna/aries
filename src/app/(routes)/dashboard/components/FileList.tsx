@@ -9,21 +9,17 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Archive,
-  MoreHorizontal,
-  Move,
-  Pen,
-  Share2,
-  Copy,
-} from "lucide-react";
+import { Archive, MoreHorizontal, Move, Pen, Share2, Copy } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { File } from "@/lib/types";
 import Loader from "@/components/Loader";
-import { archiveFileById, unarchiveFileById } from "../action";
+import {
+  archiveFileById,
+  fetchAllFilesOfTeam,
+  unarchiveFileById,
+} from "../action";
 import { toast } from "sonner";
-
-
+import { useDataStore } from "@/lib/store";
 
 const handleMenuItemClick = (
   fileId: string,
@@ -33,46 +29,59 @@ const handleMenuItemClick = (
   func(fileId, path);
 };
 
-
-const FileList = ({ files,path }: any) => {
+const FileList = ({ files, path }: any) => {
   const { user } = useKindeBrowserClient();
   const router = useRouter();
-const menuList = [
-  {
-    id: 1,
-    name: path=='/dashboard/archived'?'Unarchive':'Archive',
-    icon: Archive,
-    func: async (fileId: string,path:string) => {
-      if(path==='/dashboard/archived'){
-        const res = await unarchiveFileById(fileId);
-        res && toast('File UnArchived')
-      }else{
-         const res=await archiveFileById(fileId);
-         res && toast("File Archived");
-      }
+  const setFileList=useDataStore((state)=>state.setFileList)
+  const activeTeam=useDataStore((state)=>state.activeTeam)
+  const getTeamFiles = async (teamId: string) => {
+    try {
+      const res = await fetchAllFilesOfTeam(teamId);
+      setFileList(res as File[]);
+    
+    } catch (error) {
+      console.log(error);
+    }
+  };
+ 
+  const menuList = [
+    {
+      id: 1,
+      name: path == "/dashboard/archived" ? "Unarchive" : "Archive",
+      icon: Archive,
+      func: async (fileId: string, path: string) => {
+        if (path === "/dashboard/archived") {
+          const res = await unarchiveFileById(fileId);
+          getTeamFiles(activeTeam?.id as string);
+          res && toast("File UnArchived");
+        } else {
+          const res = await archiveFileById(fileId);
+          getTeamFiles(activeTeam?.id as string);
+          res && toast("File Archived");
+        }
+      },
     },
-  },
-  {
-    id: 2,
-    name: "Rename",
-    icon: Pen,
-  },
-  {
-    id: 3,
-    name: "Share",
-    icon: Share2,
-  },
-  {
-    id: 4,
-    name: "Move",
-    icon: Move,
-  },
-  {
-    id: 5,
-    name: "Duplicate",
-    icon: Copy,
-  },
-];
+    {
+      id: 2,
+      name: "Rename",
+      icon: Pen,
+    },
+    {
+      id: 3,
+      name: "Share",
+      icon: Share2,
+    },
+    {
+      id: 4,
+      name: "Move",
+      icon: Move,
+    },
+    {
+      id: 5,
+      name: "Duplicate",
+      icon: Copy,
+    },
+  ];
 
   return (
     <div className="overflow-x-auto p-4">
@@ -147,7 +156,11 @@ const menuList = [
                                   menu.func &&
                                   typeof menu.func === "function"
                                 ) {
-                                  handleMenuItemClick(file.id, menu.func,path as string); 
+                                  handleMenuItemClick(
+                                    file.id,
+                                    menu.func,
+                                    path as string,
+                                  );
                                 }
                               }}
                             >

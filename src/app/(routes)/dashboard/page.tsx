@@ -2,12 +2,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { checkForUserTeam, createNewUser } from "./action";
-import { useContext, useEffect,useState } from "react";
+import { useEffect,useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Header from './components/Header';
 import FileList from "./components/FileList";
 import { checkIfUserExist } from "./action";
-import { FileContextType, FileListContext } from "@/app/context/FileListContext";
+import { useDataStore } from "@/lib/store";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -21,6 +21,7 @@ export default function Dashboard() {
     enabled: !!user,
     //staleTime: 60*1000,
   });
+
 
  useEffect(() => {
    if (isSuccess && !userData) {
@@ -49,7 +50,7 @@ export default function Dashboard() {
   }, [user?.email]);
 
 
- const { fileList } = useContext(FileListContext) as FileContextType;
+ const  fileList  = useDataStore(state=>state.fileList)
    const [filteredFiles, setFilteredFiles] = useState(fileList);
 
    const handleSearch = (searchTerm:any) => {
@@ -66,6 +67,7 @@ export default function Dashboard() {
    useEffect(() => {
      setFilteredFiles(fileList?.filter((file) => !file?.archive));
    }, [fileList]);
+
 
   return (
     <div className="text-black">
