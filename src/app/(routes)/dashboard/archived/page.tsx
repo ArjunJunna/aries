@@ -7,21 +7,25 @@ import { usePathname } from "next/navigation";
 import { useDataStore } from "@/lib/store";
 
 const ArchivePage = () => {
-     const  fileList  = useDataStore(state=>state.fileList)
-     const [filteredFiles, setFilteredFiles] = useState(fileList);
-     const pathname = usePathname();
+      const pathname = usePathname();
+     const fileList = useDataStore((state) => state.fileList);
+     const [filteredFiles, setFilteredFiles] = useState(
+       fileList?.filter((file) => file.archive),
+     );
+
      const handleSearch = (searchTerm: any) => {
        if (!searchTerm) {
-         setFilteredFiles(fileList);
+         setFilteredFiles(fileList?.filter((file) => file.archive));
        } else {
-         const filtered = fileList?.filter((file) =>
+         const filtered = filteredFiles?.filter((file) =>
            file.name.toLowerCase().includes(searchTerm.toLowerCase()),
          );
          setFilteredFiles(filtered);
        }
      };
+
      useEffect(() => {
-      setFilteredFiles(fileList?.filter((file) => file.archive));
+       setFilteredFiles(fileList?.filter((file) => file?.archive));
      }, [fileList]);
 
   return (
