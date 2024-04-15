@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Twitter, Github, Instagram, Mail } from "lucide-react";
+import { Twitter, Github, Instagram, Mail,Linkedin } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -12,16 +12,25 @@ const Footer = () => {
           </p>
         </div>
         <div className="flex flex-wrap gap-5 text-sm text-muted-foreground">
-          <Link href="#" className="hover:underline">
+          <Link
+            href="https://twitter.com/Arjun_R_A"
+            className="hover:underline"
+          >
             <Twitter />
           </Link>
-          <Link href="#" className="hover:underline">
-            <Instagram />
+          <Link
+            href="https://www.linkedin.com/in/arjun-r-a-3362aa147/"
+            className="hover:underline"
+          >
+            <Linkedin />
           </Link>
-          <Link href="#" className="hover:underline">
+          <Link
+            href="https://github.com/ArjunJunna"
+            className="hover:underline"
+          >
             <Github />
           </Link>
-          <Link href="#" className="hover:underline">
+          <Link href="mailto:arjun9852@gmail.com" className="hover:underline">
             <Mail />
           </Link>
         </div>
