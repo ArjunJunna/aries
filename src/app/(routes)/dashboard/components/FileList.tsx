@@ -9,12 +9,21 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Archive, MoreHorizontal, Move, Pen, Share2, Copy } from "lucide-react";
+import {
+  Archive,
+  MoreHorizontal,
+  Move,
+  Pen,
+  Share2,
+  Copy,
+  Delete,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { File } from "@/lib/types";
 import Loader from "@/components/Loader";
 import {
   archiveFileById,
+  deleteFileById,
   fetchAllFilesOfTeam,
   unarchiveFileById,
 } from "../action";
@@ -23,7 +32,7 @@ import { useDataStore } from "@/lib/store";
 
 const handleMenuItemClick = (
   fileId: string,
-  func: (fileId: string, path: string) => Promise<void>,
+  func: (fileId: string, path?: string) => Promise<void>,
   path: string,
 ) => {
   func(fileId, path);
@@ -32,26 +41,25 @@ const handleMenuItemClick = (
 const FileList = ({ files, path }: any) => {
   const { user } = useKindeBrowserClient();
   const router = useRouter();
-const { setFileList, activeTeam } = useDataStore((state) => ({
-  setFileList: state.setFileList,
-  activeTeam: state.activeTeam,
-}));
+  const { setFileList, activeTeam } = useDataStore((state) => ({
+    setFileList: state.setFileList,
+    activeTeam: state.activeTeam,
+  }));
   const getTeamFiles = async (teamId: string) => {
     try {
       const res = await fetchAllFilesOfTeam(teamId);
       setFileList(res as File[]);
-    
     } catch (error) {
       console.log(error);
     }
   };
- 
+
   const menuList = [
     {
       id: 1,
       name: path == "/dashboard/archived" ? "Unarchive" : "Archive",
       icon: Archive,
-      func: async (fileId: string, path: string) => {
+      func: async (fileId: string, path?: string) => {
         if (path === "/dashboard/archived") {
           const res = await unarchiveFileById(fileId);
           getTeamFiles(activeTeam?.id as string);
@@ -70,18 +78,24 @@ const { setFileList, activeTeam } = useDataStore((state) => ({
     },
     {
       id: 3,
-      name: "Share",
-      icon: Share2,
-    },
-    {
-      id: 4,
       name: "Move",
       icon: Move,
     },
     {
-      id: 5,
+      id: 4,
       name: "Duplicate",
       icon: Copy,
+    },
+    {
+      id: 5,
+      name: "Delete",
+      icon: Delete,
+      func: async (fileId: string, path?: string) => {
+          const deletedFile = await deleteFileById(fileId);
+          const allTeamFiles = await fetchAllFilesOfTeam(activeTeam?.id as string);
+          setFileList(allTeamFiles as File[]);
+          deletedFile && toast(`File ${deletedFile?.name} deleted.`);
+      },
     },
   ];
 
@@ -125,7 +139,7 @@ const { setFileList, activeTeam } = useDataStore((state) => ({
                       {moment(file.updatedAt).format("DD MMM YYYY")}
                     </td>
                     <td className="whitespace-nowrap p-3 text-gray-700">
-                      {user && (
+                      {user ? (
                         <Image
                           src={user?.picture as string}
                           alt="user"
@@ -133,17 +147,19 @@ const { setFileList, activeTeam } = useDataStore((state) => ({
                           height={30}
                           className="rounded-full"
                         />
+                      ) : (
+                        <Loader />
                       )}
                     </td>
-                    <td className="whitespace-nowrap p-3 text-gray-700">
+                    <td className="whitespace-nowrap p-3 ">
                       <DropdownMenu>
                         <DropdownMenuTrigger>
-                          <MoreHorizontal className=" rounded-md p-[2px] hover:bg-slate-200" />
+                          <MoreHorizontal className=" rounded-md p-[2px] " />
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
                           {menuList.map((menu, index) => (
                             <DropdownMenuItem
-                              className="cursor-pointer gap-3"
+                              className={`cursor-pointer gap-3 ${menu.name === "Delete" ? "text-red-500 hover:bg-red-200 " : ""}`}
                               key={index}
                               onClick={(e) => {
                                 e.stopPropagation();

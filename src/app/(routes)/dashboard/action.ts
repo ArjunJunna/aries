@@ -136,3 +136,14 @@ export async function unarchiveFileById(fileId: string) {
     console.log(error);
   }
 }
+
+export async function deleteFileById(fileId:string){
+  try {
+     const deletedFile = await prisma.file.delete({
+       where: { id: fileId },
+     });
+     return deletedFile;
+  } catch (error) {
+    console.log(error);
+  }
+}
