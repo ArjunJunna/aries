@@ -19,8 +19,10 @@ type BottomSectionProps = {
 const SideBarBottomSection = ({ activeTeam }: BottomSectionProps) => {
   const router=useRouter()
   const [totalTeamFiles, setTotalTeamFiles] = useState<number>(0);
-    const fileList = useDataStore((state) => state.fileList)
-     const setFileList = useDataStore((state) => state.setFileList);
+  const { fileList, setFileList } = useDataStore((state) => ({
+    fileList: state.fileList,
+    setFileList: state.setFileList,
+  }));
     const unarchiveFiles=fileList?.filter(file=>!file.archive).length;
 
   const menuList = [

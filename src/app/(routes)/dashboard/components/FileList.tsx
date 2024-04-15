@@ -32,8 +32,10 @@ const handleMenuItemClick = (
 const FileList = ({ files, path }: any) => {
   const { user } = useKindeBrowserClient();
   const router = useRouter();
-  const setFileList=useDataStore((state)=>state.setFileList)
-  const activeTeam=useDataStore((state)=>state.activeTeam)
+const { setFileList, activeTeam } = useDataStore((state) => ({
+  setFileList: state.setFileList,
+  activeTeam: state.activeTeam,
+}));
   const getTeamFiles = async (teamId: string) => {
     try {
       const res = await fetchAllFilesOfTeam(teamId);
