@@ -1,15 +1,6 @@
 import { Metadata } from "next";
 import Workspace from "../components/Workspace";
 import { fetchFileDetails } from "../action";
-import { getAllTeamFileIds } from "../../teams/create/action";
-
-export async function generateStaticParams(): Promise<any[]> {
-  const allTeamFilesIds = await getAllTeamFileIds();
-  if (allTeamFilesIds === undefined) {
-    return [];
-  }
-  return allTeamFilesIds;
-}
 
 export async function generateMetadata({
   params,
