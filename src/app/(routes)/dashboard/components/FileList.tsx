@@ -85,14 +85,8 @@ const FileList = ({ files, path }: any) => {
 
   return (
     <div className="overflow-x-auto p-4">
-      <table className="min-w-full divide-y divide-gray-200 bg-white text-[12px]">
-        {/*{!files && (
-          <div className="flex gap-x-2">
-            <p>Loading</p>
-            <Loader/>
-          </div>
-        )}*/}
-        {files?.length != 0 ? (
+      {files?.length != 0 ? (
+        <table className="min-w-full divide-y divide-gray-200 bg-white text-[12px]">
           <>
             <thead className="ltr:text-left rtl:text-right ">
               <tr>
@@ -175,12 +169,10 @@ const FileList = ({ files, path }: any) => {
               </>
             </tbody>
           </>
-        ) : (
-          <div className="mt-4 pl-4 text-lg font-semibold">
-            No Files To Show
-          </div>
-        )}
-      </table>
+        </table>
+      ) : (
+        <div className="mt-4 pl-4 text-lg font-semibold">No Files To Show</div>
+      )}
     </div>
   );
 };
